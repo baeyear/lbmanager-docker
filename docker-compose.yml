@@ -1,0 +1,31 @@
+#
+# server build.
+# ex) $ docker-compose build --no-cache
+#
+# server start.
+# ex) $ docker-compose up -d
+#
+version: '3.9'
+
+services:
+  app:
+    build: ./docker/php
+    volumes:
+      - ./line_official_account_manager:/work
+
+  web:
+    image: nginx:1.20-alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./line_official_account_manager:/work
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    working_dir: /work
+
+  db:
+    build: ./docker/mysql
+    volumes:
+      - db-store:/var/lib/mysql
+
+volumes:
+  db-store:
